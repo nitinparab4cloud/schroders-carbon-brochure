@@ -10,8 +10,15 @@
     --paper:#FBF9F3; --paper-edge:#EDE8DA;
     --ink:#16233F; --ink-soft:#5B6478; --ink-faint:#8B93A6;
     --page-bg:#EFEAE0; --page-ink:#16233F; --page-ink-soft:#5B6478;
+    /* Page chrome (buttons) — follows viewer theme */
     --card-bg:#FFFFFF; --card-border:#E4E0D2;
     --btn-bg:#16233F; --btn-ink:#FBF9F3;
+    /* Panel-internal surfaces (stat boxes, plan cards) — the brochure always
+       reads as paper, so these stay fixed regardless of viewer theme */
+    --panel-card-bg:#FFFFFF; --panel-card-border:#E4E0D2;
+    /* Light accent washes for the four action-plan cards, echoing the
+       mint/danger stat boxes on the front */
+    --tint-blue:#E9F2F8; --tint-teal:#E3EFEC; --tint-sage:#EFF4EE; --tint-tan:#F7EFE3;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
@@ -80,11 +87,11 @@
   .spread.flip-in{transform:rotateY(0deg);opacity:1;}
 
   .panel{
-    --pw:clamp(168px,21vw,232px);
+    --pw:clamp(180px,23vw,248px);
     width:var(--pw);
-    aspect-ratio:37/78;
+    min-height:calc(var(--pw) * 78 / 37);
     position:relative;
-    overflow:hidden;
+    overflow:visible;
     background:var(--paper);
     border:1px solid var(--paper-edge);
     transform-origin:left center;
@@ -130,7 +137,9 @@
   }
   .stat-num.danger{color:var(--danger-text);}
   .stat-box{border-radius:10px;padding:12px 13px;}
-  .stat-box.plain{background:var(--card-bg);border:1px solid var(--card-border);}
+  .stat-box.plain{background:var(--panel-card-bg);border:1px solid var(--panel-card-border);}
+  .stat-box.good{background:var(--mint-bg);}
+  .stat-box.good .stat-num{color:var(--mint-text);}
   .stat-box.danger{background:var(--danger-bg);}
   .stat-box.danger .stat-num{color:var(--danger-text);}
   .stat-cap{font-size:11px;color:var(--ink-faint);}
@@ -154,10 +163,10 @@
     font-size:10.5px;font-weight:600;display:flex;align-items:center;justify-content:center;
   }
 
-  .plan-card{border-left:3px solid var(--blue);background:var(--card-bg);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:5px;}
-  .plan-card.engage{border-color:var(--teal);}
-  .plan-card.escalate{border-color:var(--sage);}
-  .plan-card.reallocate{border-color:var(--tan);}
+  .plan-card{border-left:3px solid var(--blue);background:var(--tint-blue);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:5px;}
+  .plan-card.engage{border-color:var(--teal);background:var(--tint-teal);}
+  .plan-card.escalate{border-color:var(--sage);background:var(--tint-sage);}
+  .plan-card.reallocate{border-color:var(--tan);background:var(--tint-tan);}
   .plan-card .num{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--ink-faint);}
   .plan-card .ttl{font-size:13px;font-weight:700;color:var(--ink);}
   .plan-card p{margin:0;font-size:11.5px;line-height:1.4;color:var(--ink-soft);}
@@ -172,12 +181,33 @@
     .stagebox{padding-block:8px;}
     .spread{flex-direction:column;filter:drop-shadow(0 14px 26px rgba(16,27,51,.2));}
     .panel{
-      width:min(360px,86vw); aspect-ratio:auto; min-height:auto;
+      width:min(420px,92vw); min-height:auto;
       transform-origin:center top;
       margin-left:0 !important; margin-top:-1px;
     }
     .spread:not(.open) .panel:nth-child(2){transform:rotateX(-108deg);}
     .spread:not(.open) .panel:nth-child(3){transform:rotateX(108deg);}
+
+    .panel-pad{padding:26px 22px;gap:16px;}
+    .label{font-size:12.5px;}
+    .h1{font-size:30px;}
+    .h2{font-size:22px;}
+    .h3{font-size:17px;}
+    .body-text{font-size:15px;}
+    .meta{font-size:13px;}
+    .stat-num{font-size:22px;}
+    .stat-cap{font-size:13px;}
+    .dark-callout{font-size:15px;padding:16px;}
+    .dark-callout .big{font-size:34px;}
+    .mint-box strong{font-size:16px;}
+    .qlist li{font-size:14.5px;}
+    .qnum{width:22px;height:22px;font-size:12px;}
+    .plan-card{padding:13px 14px;}
+    .plan-card .ttl{font-size:15px;}
+    .plan-card p{font-size:13.5px;}
+    .plan-card .ind{font-size:11px;}
+    .plan-card .ind strong{font-size:12.5px;}
+    .closer{font-size:15px;}
   }
 </style>
 
@@ -225,7 +255,7 @@
             <h2 class="h2">Is climate activity translating into portfolio change?</h2>
             <div class="stat-block">
               <p class="meta">Near-term temperature score &mdash; 2019 to 2024&ndash;25</p>
-              <div class="stat-box plain"><span class="stat-num">2.9°C → 2.4°C</span></div>
+              <div class="stat-box good"><span class="stat-num">2.9°C → 2.4°C</span></div>
             </div>
             <div class="stat-block">
               <p class="meta">Not-aligned fund AUM &mdash; Wealth Management listed equity &amp; credit funds, by AUM</p>
@@ -297,9 +327,7 @@
         </article>
 
         <article class="panel" style="--i:2">
-          <div class="panel-pad">
-            <p class="label" style="visibility:hidden;">spacer</p>
-            <h2 class="h2" style="visibility:hidden;">spacer</h2>
+          <div class="panel-pad" style="justify-content:center;">
             <div class="plan-card escalate">
               <span class="num">03</span>
               <span class="ttl">Escalate</span>
@@ -373,3 +401,4 @@
   });
 })();
 </script>
+
